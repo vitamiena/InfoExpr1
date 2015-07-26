@@ -11,7 +11,7 @@ int main(int argc, char **argv)
 
   s = sq_parti(num, upp, len);
 
-  printf("%d\n", s);
+  printf("sum = %d\n", s);
 
   return 0;
 }
