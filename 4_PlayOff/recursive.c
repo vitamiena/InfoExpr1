@@ -170,7 +170,6 @@ int sq_parti_(int seq[], int num, int upp, int len, int pos, int sum)
 
 int make_val(int num, int upp, int len)
 {
-  int pos = 0;
   int i, j, k;
   int ti, tj, tk;
 
@@ -183,7 +182,7 @@ int make_val(int num, int upp, int len)
         if ( i == 0 ) { Val[i][j][k] = 1; }
         else if ( j == 0 || k == 0 ) { Val[i][j][k] = 0; }
         else if ( j == 1 && i <= k) {Val[i][j][k] = 1; }
-        else { Val[i][j][k] = 0; }
+        else { Val[i][j][k] = -1; }
       }
     }
   }
@@ -239,7 +238,7 @@ int sq_parti3(int num, int upp, int len)
   if ( num < len ) { len = num; }
 
   data = get_val2(num, upp, len);
-  if ( data != 0 ) {
+  if ( data != -1 ) {
     return data;
   } else {
     data = sq_parti3(num-SQ(upp), upp, len-1) + sq_parti3(num, upp-1, len);
@@ -292,7 +291,7 @@ int get_val2(int num, int upp, int len)
     cell = cell->next;
   }
 
-  return 0;
+  return -1;
 }
 
 int hash(int num, int upp, int len)
