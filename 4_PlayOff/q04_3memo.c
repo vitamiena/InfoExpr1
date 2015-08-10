@@ -8,8 +8,8 @@ int main(int argc, char **argv)
   int upp = atoi(argv[2]);
   int len = atoi(argv[3]);
 
-  printf("%d\n", sq_parti3(num, upp, len));
-  printf("%d\n", count_cell());
+  printf("f(%d,%d,%d) = %d\n", num, upp, len, sq_parti3(num, upp, len));
+  printf("cell = %d\n", count_cell());
 
   return 0;
 }

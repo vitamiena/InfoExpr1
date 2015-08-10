@@ -11,7 +11,7 @@ int main(int argc, char **argv)
   int val_num;
   int val_upp;
   int val_len;
-  int n = 1000;
+  int n = 10000;
   clock_t start, end;
 
   if ( argc < 6 ) {

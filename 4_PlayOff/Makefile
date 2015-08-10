@@ -14,5 +14,7 @@ exp04_2dp: recursive.h recursive.c exp04_2dp.c
 	gcc -lm -o exp04_2dp recursive.c exp04_2dp.c
 q04_3memo: recursive.h recursive.c q04_3memo.c
 	gcc -lm -o q04_3memo recursive.c q04_3memo.c
+exp04_3memo: recursive.h recursive.c exp04_3memo.c
+	gcc -lm -o exp04_3memo recursive.c exp04_3memo.c
 q05_1ct: recursive.h recursive.c q05_1ct.c
 	gcc -lm -o q05_1ct recursive.c q05_1ct.c
