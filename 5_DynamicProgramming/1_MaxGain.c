@@ -1,11 +1,12 @@
 #include <stdio.h>
 
 #define NUM 10
-#define MAX 10000000
 
 void arr_input(int arr[][NUM], int h, int l); // Input
 void make_work(int wt[][NUM], int arr[][NUM], int h, int l);  // Making Working Table
 int set_val(int wt[][NUM], int i, int j, int h); // Search max route and return max value
+void show_max_route(int wt[][NUM], int arr[][NUM], int h, int l);
+void show_max_route_(int arr[][NUM], int i, int j, int h);
 void arr_output(int arr[][NUM], int h, int l); // Output
 
 int main(void) {
@@ -18,6 +19,7 @@ int main(void) {
 
   make_work(wt, arr, h, l);
 
+  show_max_route(wt, arr, h, l);
   arr_output(wt, h, l);
 
   return 0;
@@ -48,11 +50,40 @@ int set_val(int wt[][NUM], int i, int j, int h) {
 
   if ( j == 0 ) { return 0; }
 
-  if ( i != 0 && wt[i-1][j-1] > max ) { max = wt[i-1][j-1]; }
+  if ( i > 0 && wt[i-1][j-1] > max ) { max = wt[i-1][j-1]; }
   if ( wt[i][j-1] > max ) { max = wt[i][j-1]; }
   if ( i < h-1 && wt[i+1][j-1] > max ) { max = wt[i+1][j-1]; }
 
   return max;
+}
+
+void show_max_route(int wt[][NUM], int arr[][NUM], int h, int l) {
+  int i;
+  int mh = -1;
+  int max = -1;
+
+  for ( i = 0; i < h; i++ ) {
+    if ( wt[i][l-1] > max ) {
+      mh = i;
+      max = wt[i][l-1];
+    }
+  }
+
+  show_max_route_(arr, mh, l-1, h);
+  printf(": %2d\n", max);
+}
+
+void show_max_route_(int arr[][NUM], int i, int j, int h) {
+  int max = -1, mh = 1;
+
+  if ( j > 0 ) {
+    if ( i > 0 && arr[i-1][j-1] > max  ) { mh = i-1; max = arr[i-1][j-1];}
+    if ( arr[i][j-1] > max  ) { mh = i; max = arr[i][j-1]; }
+    if ( i < h-1 && arr[i+1][j-1] > max  ) { mh = i+1; max = arr[i+1][j-1];}
+    show_max_route_(arr, mh, j-1, h);
+  }
+
+  printf("%2d ", i);
 }
 
 void arr_output(int arr[][NUM], int h, int l) {
