@@ -4,6 +4,8 @@
 #define MAX 10000
 #define NONE -1
 #define START 0
+#define OPEN 1
+#define CLOSE 2
 
 typedef enum { false, true } Bool;
 
@@ -11,12 +13,11 @@ typedef struct node {
   char label;
   char label_from;
   int cost;
+  Bool open;
 } Node;
 
 int Cost[NUM][NUM];
 Node Label0[NUM];
-Node Queue[NUM];
-int Pos = 0;
 
 void arr_input(int arr[][NUM], int n);
 void arr_output(int arr[][NUM], int n);
@@ -24,13 +25,12 @@ void arr_copy(const int arr1[][NUM], int arr2[][NUM], int n);
 Bool arr_match(const int arr1[][NUM], const int arr2[][NUM], int n);
 int get_cost(char str1, char str2);
 void init(int n, char start);
-void enqueue(Node node);
-Node dequeue(void);
-void relation_own(int relation[][NUM], int n);
-void floyd(const int rel[][NUM], int arr0[][NUM], int n);
+void dijkstra(char start, int n, char end);
+Bool exist_open(int n);
+int get_index(char ch);
+void show_path(Node node, char start);
 
 int main(void) {
-  int table[NUM][NUM];
   int n;
   char start, end;
 
@@ -38,7 +38,7 @@ int main(void) {
   arr_input(Cost, n);
   scanf("%c %c", &start, &end);
 
-  arr_output(Cost, n);
+  dijkstra(start, n, end);
 
   return 0;
 }
@@ -97,34 +97,95 @@ void init(int n, char start) {
   int i;
 
   for ( i = 0; i < n; i++ ) {
-    Label0[i].label = 'A'+1;
+    Label0[i].label = 'A'+i;
     if ( Label0[i].label == start ) {
       Label0[i].cost = 0;
       Label0[i].label_from = START;
-      enqueue(Label0[i]);
+      Label0[i].open = OPEN;
     } else {
       Label0[i].cost = MAX;
       Label0[i].label_from = NONE;
+      Label0[i].open = NONE;
     }
   }
 }
 
-void enqueue(Node node) {
-  Queue[Pos++] = node;
-}
-
-Node dequeue(void) {
-  return Queue[--Pos];
-}
-
-
-void dijkstra(char start) {
+void dijkstra(char start, int n, char end) {
   Node node;
-  int min;
+  int ind;
+  int min, min_pos;
+  int i;
+  int t;
+  char ch = start;
 
-  do {
+  ind = get_index(ch);
+  node = Label0[ind];
+  node.open = OPEN;
+
+  while ( exist_open(n) ) {
     min = MAX;
-    node.cost = MAX;
+    min_pos = -1;
 
-  } while ( node.cost != MAX )
+    if ( node.label == ch ) { show_path(node, start); }
+
+    ind = min_open(n);
+    node = Label0[ind];
+    node.open = CLOSE;
+
+    for ( i = 0; i < n; i++ ) {
+      if ( Cost[ind][i] != 0 ) {
+        if ( Label0[i].open == NONE ) {
+          Label0[i].open = OPEN;
+          Label0[i].cost = node.cost + Cost[ind][i];
+          Label0[i].label_from = node.label;
+        } else {
+          t = node.cost + Cost[ind][i];
+          if ( t < Label0[i].cost ) {
+            Label0[i].cost = t;
+            Label0[i].label_from = node.label;
+          }
+        }
+        if ( min > Label0[i].cost ) {
+          min = Label0[i].cost;
+          min_pos = i;
+        }
+      }
+    }
+
+  }
+}
+
+Bool exist_open(int n) {
+  int i;
+
+  for ( i = 0; i < n; i++ ) {
+    if ( Label0[i].open == OPEN ) { return true; }
+  }
+
+  return false;
+}
+
+int get_index(char ch) {
+  return ch - 'A';
+}
+
+int min_open(int n) {
+  int i;
+  int min = MAX, min_pos = -1;
+
+  for ( i = 0; i < n; i++ ) {
+    if ( Label0[i].open != OPEN ) { continue; }
+    if ( Label0[i].cost < min ) { min = Label0[i].cost; min_pos = i; }
+  }
+
+  return min_pos;
+}
+
+void show_path(Node node, char start) {
+  int ind;
+
+  if ( node.label == start ) { printf("%c ", node.label); return; }
+  ind = get_index(node.label_from);
+  show_path(Label0[ind], start);
+  printf("- %c", node.label);
 }
