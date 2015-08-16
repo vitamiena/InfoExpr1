@@ -33,10 +33,11 @@ void show_path(Node node, char start);
 int main(void) {
   int n;
   char start, end;
+  int i;
 
   scanf("%d", &n);
   arr_input(Cost, n);
-  scanf("%c %c", &start, &end);
+  scanf(" %c %c", &start, &end);
 
   dijkstra(start, n, end);
 
@@ -111,38 +112,41 @@ void init(int n, char start) {
 }
 
 void dijkstra(char start, int n, char end) {
-  Node node;
+  Node *node;
   int ind;
   int min, min_pos;
   int i;
   int t;
   char ch = start;
 
-  ind = get_index(ch);
-  node = Label0[ind];
-  node.open = OPEN;
+  init(n, start);
 
-  while ( exist_open(n) ) {
+  ind = get_index(ch);
+  node = &(Label0[ind]);
+  node->open = OPEN;
+
+  while ( 1 ) {
     min = MAX;
     min_pos = -1;
-
-    if ( node.label == ch ) { show_path(node, start); }
+    if ( exist_open(n) == false ) { puts("Failed"); return; }
 
     ind = min_open(n);
-    node = Label0[ind];
-    node.open = CLOSE;
+    node = &Label0[ind];
+    node->open = CLOSE;
+
+    if ( node->label == end ) { show_path(*node, start); return ; }
 
     for ( i = 0; i < n; i++ ) {
       if ( Cost[ind][i] != 0 ) {
         if ( Label0[i].open == NONE ) {
           Label0[i].open = OPEN;
-          Label0[i].cost = node.cost + Cost[ind][i];
-          Label0[i].label_from = node.label;
+          Label0[i].cost = node->cost + Cost[ind][i];
+          Label0[i].label_from = node->label;
         } else {
-          t = node.cost + Cost[ind][i];
+          t = node->cost + Cost[ind][i];
           if ( t < Label0[i].cost ) {
             Label0[i].cost = t;
-            Label0[i].label_from = node.label;
+            Label0[i].label_from = node->label;
           }
         }
         if ( min > Label0[i].cost ) {
@@ -151,7 +155,6 @@ void dijkstra(char start, int n, char end) {
         }
       }
     }
-
   }
 }
 
@@ -187,5 +190,5 @@ void show_path(Node node, char start) {
   if ( node.label == start ) { printf("%c ", node.label); return; }
   ind = get_index(node.label_from);
   show_path(Label0[ind], start);
-  printf("- %c", node.label);
+  printf("- %c ", node.label);
 }
