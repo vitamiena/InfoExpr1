@@ -69,7 +69,7 @@ void show_max_route(int wt[][NUM], int arr[][NUM], int h, int l) {
     }
   }
 
-  show_max_route_(arr, mh, l-1, h);
+  show_max_route_(wt, mh, l-1, h);
   printf(": %2d\n", max);
 }
 
